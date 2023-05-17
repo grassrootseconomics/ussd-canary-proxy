@@ -1,0 +1,17 @@
+[service]
+address     = ":5000"
+api_key     = ""
+# Exposes Go process Prometheus metrics
+# /metrics endpoint
+metrics     = true
+serve_proxy = false
+
+[postgres]
+dsn = ""
+
+[webhook]
+secret = "arandomlongstring"
+
+[upstream]
+v1 = ""
+v2 = ""

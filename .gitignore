@@ -1,0 +1,4 @@
+ussd-canary-proxy
+dist
+**/*.env
+covprofile

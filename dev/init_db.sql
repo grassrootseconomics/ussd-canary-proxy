@@ -1,0 +1,1 @@
+CREATE DATABASE ussd_canary_proxy;
