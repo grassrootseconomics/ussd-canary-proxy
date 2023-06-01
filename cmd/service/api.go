@@ -22,8 +22,9 @@ func initRouter(api *api.API) *bunrouter.Router {
 	}
 
 	cacheAPI := router.NewGroup("/api/cache")
-	cacheAPI.Use(errorHandler).Use(authMiddleware)
+	cacheAPI = cacheAPI.Use(errorHandler).Use(authMiddleware)
 	cacheAPI.POST("/add", api.AddToCacheHandler)
+	cacheAPI.PUT("/update", api.UpdateCacheHandler)
 	cacheAPI.GET("/get/:phoneNumber", api.GetFromCacheHandler)
 
 	ussdIngress := router.NewGroup("/ussd").Compat()
@@ -45,13 +46,17 @@ func authMiddleware(next bunrouter.HandlerFunc) bunrouter.HandlerFunc {
 func errorHandler(next bunrouter.HandlerFunc) bunrouter.HandlerFunc {
 	return func(w http.ResponseWriter, req bunrouter.Request) error {
 		err := next(w, req)
-
 		switch err {
 		case nil:
 		case ErrNotAuthorized:
-			w.WriteHeader(http.StatusTooManyRequests)
+			w.WriteHeader(http.StatusForbidden)
 			_ = bunrouter.JSON(w, bunrouter.H{
-				"message": "Not Authorized",
+				"message": "Not authorized",
+			})
+		case api.ErrDuplicate:
+			w.WriteHeader(http.StatusConflict)
+			_ = bunrouter.JSON(w, bunrouter.H{
+				"message": "Duplicate record",
 			})
 		default:
 			w.WriteHeader(http.StatusInternalServerError)
