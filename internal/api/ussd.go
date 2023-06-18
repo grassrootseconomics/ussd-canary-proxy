@@ -36,7 +36,7 @@ func (api *API) USSDProxyHandler() http.HandlerFunc {
 		case 2:
 			api.proxy.V2.ServeHTTP(w, r)
 		default:
-			api.proxy.V1.ServeHTTP(w, r)
+			api.proxy.V2.ServeHTTP(w, r)
 		}
 	}
 }
