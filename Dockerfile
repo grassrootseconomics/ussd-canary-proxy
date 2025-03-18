@@ -1,4 +1,4 @@
-FROM golang:1-bullseye as build
+FROM golang:1.23-bullseye as build
 
 ENV CGO_ENABLED=0
 ENV GOOS=linux
