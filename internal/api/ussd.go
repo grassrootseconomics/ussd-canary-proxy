@@ -3,7 +3,6 @@ package api
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 )
@@ -28,7 +27,7 @@ func (api *API) USSDProxyHandler() http.HandlerFunc {
 		}
 		api.logg.Debug("proxy handler: phone details", "phone", formValues.Get("phoneNumber"), "version", version)
 
-		r.Body = ioutil.NopCloser(bytes.NewBuffer(buffer))
+		r.Body = io.NopCloser(bytes.NewBuffer(buffer))
 
 		switch version {
 		case 1:
@@ -36,7 +35,7 @@ func (api *API) USSDProxyHandler() http.HandlerFunc {
 		case 2:
 			api.proxy.V2.ServeHTTP(w, r)
 		default:
-			api.proxy.V2.ServeHTTP(w, r)
+			api.proxy.V1.ServeHTTP(w, r)
 		}
 	}
 }
